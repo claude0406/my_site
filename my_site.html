@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/claude0406/my_site.git
+git push -u origin main
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glow Indicator Nav</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      font-family: Arial, sans-serif;
+    }
+
+    .nav {
+      border: 1px solid #7a7a7a;
+      padding: 32px 40px;
+      background: #000;
+    }
+
+    .menu {
+      position: relative;
+      display: flex;
+      gap: 42px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .menu-item {
+      position: relative;
+      color: white;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 8px 0 24px;
+      user-select: none;
+      z-index: 2;
+    }
+
+    .indicator {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 70px;
+      height: 28px;
+      pointer-events: none;
+      transform: translateX(0);
+      transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 1;
+    }
+
+    .glow {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 14px;
+      border-radius: 999px;
+      background: radial-gradient(
+        ellipse at center,
+        rgba(0, 183, 255, 0.95) 0%,
+        rgba(0, 183, 255, 0.55) 38%,
+        rgba(0, 183, 255, 0.18) 68%,
+        rgba(0, 183, 255, 0.02) 100%
+      );
+      filter: blur(6px);
+    }
+
+    .line {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 2px;
+      border-radius: 999px;
+      background: white;
+      box-shadow:
+        0 0 6px rgba(0, 183, 255, 0.9),
+        0 0 12px rgba(0, 183, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <ul class="menu" id="menu">
+      <li class="menu-item active">Home</li>
+      <li class="menu-item">About</li>
+      <li class="menu-item">Service</li>
+      <li class="menu-item">Contact</li>
+
+      <span class="indicator" id="indicator">
+        <span class="glow"></span>
+        <span class="line"></span>
+      </span>
+    </ul>
+  </nav>
+
+  <script>
+    const menu = document.getElementById("menu");
+    const items = document.querySelectorAll(".menu-item");
+    const indicator = document.getElementById("indicator");
+
+    function moveIndicator(target) {
+      const menuRect = menu.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+
+      const left =
+        targetRect.left -
+        menuRect.left +
+        targetRect.width / 2 -
+        indicator.offsetWidth / 2;
+
+      indicator.style.transform = `translateX(${left}px)`;
+    }
+
+    items.forEach((item) => {
+      item.addEventListener("mouseenter", () => {
+        items.forEach((el) => el.classList.remove("active"));
+        item.classList.add("active");
+        moveIndicator(item);
+      });
+    });
+
+    window.addEventListener("load", () => {
+      const activeItem = document.querySelector(".menu-item.active");
+      if (activeItem) moveIndicator(activeItem);
+    });
+
+    window.addEventListener("resize", () => {
+      const activeItem = document.querySelector(".menu-item.active");
+      if (activeItem) moveIndicator(activeItem);
+    });
+  </script>
+</body>
+</html>
